@@ -1,25 +1,39 @@
-import logo from './logo.svg';
+import { Link, Route } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import ParkList from './Components/ParkList'
+import ParkDetail from './Components/ParkDetail';
+// import parkData from './parks.json';
 import './App.css';
-
 function App() {
+  const [parkData, setParkData] = useState([]);
+  const getParkData = async () => {
+    try {
+      const res = await fetch("https://developer.nps.gov/api/v1/parks/?api_key=WD5PtZivK9iCeDMsMfwNGhn7KeGfdlRn9jfP3m0K");
+      const data = await res.json();
+      setParkData(data.data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  useEffect(() => {
+    getParkData();
+  }, []);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <nav>
+        <Link to="/">National Parks List</Link>
+      </nav>
+      <main>
+        {/* <Route exact path="/" render={() => <ParkList parkData={parkData} />} />
+        <Route path="/park/:id" render={routerProps => {
+          // return <ParkDetail routerProps={routerProps} />
+          const park = [...parkData].filter(
+            (p) => p.id === routerProps.match.params.id
+          );
+          return <ParkDetail {...routerProps} park={park[0]} />
+        }} /> */}
+      </main>
     </div>
   );
 }
-
 export default App;
